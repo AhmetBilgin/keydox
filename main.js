@@ -2,7 +2,13 @@ const { app, screen, Tray, globalShortcut, BrowserWindow } = require('electron')
 const ioHook = require('iohook')
 const path = require('path')
 const keyCodes = require('./keys')
-const { changeImg, toggleWindow } = require('./utils')
+const {
+  changeImg,
+  toggleWindow,
+  incrementTotalRegisteredImages,
+  incrementImg,
+  decrementImg
+} = require('./utils')
 const iconPath = path.join(__dirname, 'images/oval@2x.png')
 
 let mainWindow
@@ -20,17 +26,19 @@ app.on('activate', function() {
 
 function createWindow() {
   let display = screen.getPrimaryDisplay()
-  // let height = display.bounds.height
-  const { width, height } = display.workAreaSize
+  const { width: displayWidth, height: displayHeight } = display.workAreaSize
   trays = new Tray(iconPath)
 
+  const windowPosition = windowPositions().BOTTOM_RIGHT
+  const windowWidth = 1200
+  const windowHeight = 500
+
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 400,
-    x: width - 800,
-    y: height - 300,
+    width: windowWidth,
+    height: windowHeight,
+    x: windowPosition.x,
+    y: windowPosition.y,
     frame: false,
-    opacity: 0.7,
     transparent: true
   })
 
@@ -46,13 +54,15 @@ function createWindow() {
   //   console.log('Shortcut called with keys:', keys)
   // });
 
-  registerKeyForVisibilityToggle('Alt+Backspace')
+  registerToggleVisibilityKey('Alt+Backspace')
   registerKeyForImage('Alt+0', '0')
   registerKeyForImage('Alt+1', '1')
   registerKeyForImage('Alt+2', '2')
   registerKeyForImage('Alt+3', '3')
   registerKeyForImage('Alt+4', '4')
   registerKeyForImage('Alt+5', '5')
+  registerIncrementImageKey('Alt+=')
+  registerDecrementImageKey('Alt+-')
 
   ioHook.start()
 
@@ -66,11 +76,37 @@ function createWindow() {
   mainWindow.on('closed', function() {
     mainWindow = null
   })
+
+  function windowPositions() {
+    const top = 0
+    const left = 0
+    const right = displayWidth - windowWidth
+    const bottom = displayHeight - windowHeight
+
+    const windowPositions = {
+      TOP_LEFT: { y: top, x: left },
+      TOP_RIGHT: { y: top, x: right },
+      BOTTOM_RIGHT: { y: bottom, x: right },
+      BOTTOM_LEFT: { y: bottom, x: left }
+    }
+    return windowPositions
+  }
 }
 
-function registerKeyForVisibilityToggle(key) {
+function registerToggleVisibilityKey(key) {
   globalShortcut.register(key, () => {
     toggleWindow(mainWindow)
+  })
+}
+function registerIncrementImageKey(key) {
+  globalShortcut.register(key, () => {
+    incrementImg(mainWindow)
+  })
+}
+
+function registerDecrementImageKey(key) {
+  globalShortcut.register(key, () => {
+    decrementImg(mainWindow)
   })
 }
 
@@ -80,4 +116,5 @@ function registerKeyForImage(key, imageName) {
       changeImg(imageName, mainWindow)
     }
   })
+  incrementTotalRegisteredImages()
 }
