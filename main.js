@@ -20,15 +20,17 @@ app.on('activate', function() {
 
 function createWindow() {
   let display = screen.getPrimaryDisplay()
-  let height = display.bounds.height
+  // let height = display.bounds.height
+  const { width, height } = display.workAreaSize
   trays = new Tray(iconPath)
 
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 190,
-    x: 0,
-    y: height,
+    width: 800,
+    height: 400,
+    x: width - 800,
+    y: height - 300,
     frame: false,
+    opacity: 0.7,
     transparent: true
   })
 
@@ -44,27 +46,13 @@ function createWindow() {
   //   console.log('Shortcut called with keys:', keys)
   // });
 
-  globalShortcut.register('Command+)', () => {
-    toggleWindow(mainWindow)
-  })
-
-  globalShortcut.register('Command+1', () => {
-    if (mainWindow.isVisible()) {
-      changeImg('1', mainWindow)
-    }
-  })
-
-  globalShortcut.register('Command+2', () => {
-    if (mainWindow.isVisible()) {
-      changeImg('2', mainWindow)
-    }
-  })
-
-  globalShortcut.register('Command+3', () => {
-    if (mainWindow.isVisible()) {
-      changeImg('3', mainWindow)
-    }
-  })
+  registerKeyForVisibilityToggle('Alt+Backspace')
+  registerKeyForImage('Alt+0', '0')
+  registerKeyForImage('Alt+1', '1')
+  registerKeyForImage('Alt+2', '2')
+  registerKeyForImage('Alt+3', '3')
+  registerKeyForImage('Alt+4', '4')
+  registerKeyForImage('Alt+5', '5')
 
   ioHook.start()
 
@@ -77,5 +65,19 @@ function createWindow() {
 
   mainWindow.on('closed', function() {
     mainWindow = null
+  })
+}
+
+function registerKeyForVisibilityToggle(key) {
+  globalShortcut.register(key, () => {
+    toggleWindow(mainWindow)
+  })
+}
+
+function registerKeyForImage(key, imageName) {
+  globalShortcut.register(key, () => {
+    if (mainWindow.isVisible()) {
+      changeImg(imageName, mainWindow)
+    }
   })
 }
