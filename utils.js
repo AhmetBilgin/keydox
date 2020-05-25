@@ -4,7 +4,7 @@ let totalImages = 0
 const changeImg = (img, mainWindow) => {
   currentImage = img
   mainWindow.webContents.executeJavaScript(
-    `document.querySelector("img").src="../images/${img}.png";`
+    `document.querySelector("img").classList = "class${img}";`
   )
 }
 

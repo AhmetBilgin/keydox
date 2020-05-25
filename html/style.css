@@ -1,9 +1,33 @@
 body {
-    width: 1200px;
+    width: 100%;
     overflow: hidden;
     background: transparent;
 }
 
 img {
     width: 100%;
+}
+
+.class0 {
+    margin-top: calc(-60px);
+}
+
+.class1 {
+    margin-top: calc(-1*826px - 9px);
+}
+
+.class2 {
+    margin-top: calc(-2*826px - 31px);
+}
+
+.class3 {
+    margin-top: calc(-3*826px - 53px);
+}
+
+.class4 {
+    margin-top: calc(-4*826px - 75px);
+}
+
+.class5 {
+    margin-top: calc(-5*826px - 97px);
 }

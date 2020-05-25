@@ -29,9 +29,9 @@ function createWindow() {
   const { width: displayWidth, height: displayHeight } = display.workAreaSize
   trays = new Tray(iconPath)
 
-  const windowPosition = windowPositions().BOTTOM_RIGHT
   const windowWidth = 1200
   const windowHeight = 500
+  const windowPosition = windowPositions().BOTTOM_RIGHT
 
   mainWindow = new BrowserWindow({
     width: windowWidth,
@@ -69,6 +69,7 @@ function createWindow() {
   mainWindow.setAlwaysOnTop(true, 'floating')
   mainWindow.setVisibleOnAllWorkspaces(true)
   mainWindow.loadURL(`file://${__dirname}/html/index.html`)
+  changeImg(0, mainWindow)
 
   // Open the DevTools.---
   // mainWindow.webContents.openDevTools()
@@ -83,13 +84,13 @@ function createWindow() {
     const right = displayWidth - windowWidth
     const bottom = displayHeight - windowHeight
 
-    const windowPositions = {
+    const positions = {
       TOP_LEFT: { y: top, x: left },
       TOP_RIGHT: { y: top, x: right },
       BOTTOM_RIGHT: { y: bottom, x: right },
       BOTTOM_LEFT: { y: bottom, x: left }
     }
-    return windowPositions
+    return positions
   }
 }
 
